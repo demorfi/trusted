@@ -64,7 +64,7 @@ class CertsController extends \BaseController {
 			$subj .= "'";
 
 			// Create private key and CSR
-			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -keyout {$sluggedDomain}.key -out {$sluggedDomain}.csr -days 365 -subj {$subj}");
+			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 -keyout {$sluggedDomain}.key -out {$sluggedDomain}.csr -days 365 -subj {$subj}");
 			$process->run();
 
 			// Sign cert, convert into DES and remove CSR
@@ -233,7 +233,7 @@ class CertsController extends \BaseController {
 			$ou = Input::get('ou');
 			$cn = Input::get('cn');
 			$email = Input::get('email');
-			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -x509 -keyout rootCA.key -out rootCA.pem -days 3650 -subj '/C={$c}/ST={$st}/L={$l}/O={$o}/OU={$ou}/CN={$cn}/Email={$email}'");
+			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 -x509 -keyout rootCA.key -out rootCA.pem -days 3650 -subj '/C={$c}/ST={$st}/L={$l}/O={$o}/OU={$ou}/CN={$cn}/Email={$email}'");
 			$process->run();
 
 			$process = new Process("cd {$this->certDir} && openssl x509 -in rootCA.pem -out rootCA.crt");
