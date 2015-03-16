@@ -81,6 +81,12 @@
 			</div>
 		</div>
 		<div class="form-group">
+			{{ Form::label('root_password', 'Root CA Password', ['class' => 'col-sm-2 control-label']) }}
+			<div class="col-sm-10">
+				{{ Form::password('root_password', ['class' => 'form-control']) }}
+			</div>
+		</div>
+		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{{ Form::submit('Create signed certificate', ['class' => 'btn btn-success']) }}
 			</div>
@@ -95,6 +101,12 @@
     				{{ Form::file('csr') }}
     			</div>
     		</div>
+    		<div class="form-group">
+				{{ Form::label('root_password', 'Root CA Password', ['class' => 'col-sm-2 control-label']) }}
+				<div class="col-sm-10">
+					{{ Form::password('root_password', ['class' => 'form-control']) }}
+				</div>
+			</div>
     		<div class="form-group">
     			<div class="col-sm-offset-2 col-sm-10">
     				{{ Form::submit('Sign the CSR', ['class' => 'btn btn-success']) }}

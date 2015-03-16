@@ -47,6 +47,16 @@
 			</div>
 		</div>
 		<div class="form-group">
+			{{ Form::label('password1', 'Password', ['class' => 'col-sm-2 control-label']) }}
+			<div class="col-sm-4">
+				{{ Form::password('password1', ['class' => 'form-control']) }}
+			</div>
+			{{ Form::label('password2', 'Repeat Password', ['class' => 'col-sm-2 control-label']) }}
+			<div class="col-sm-4">
+				{{ Form::password('password2', ['class' => 'form-control']) }}
+			</div>
+		</div>
+		<div class="form-group">
 			<div class="col-sm-offset-2 col-sm-10">
 				{{ Form::submit('Create Root CA', ['class' => 'btn btn-success']) }}
 			</div>

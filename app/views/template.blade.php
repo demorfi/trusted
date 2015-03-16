@@ -5,7 +5,7 @@
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="icon" href="/img/favicon.png" type="image/png" />
-	<title>trusted - SSL certificates manager</title>
+	<title>trusted2 - SSL certificates manager</title>
 
 	{{ HTML::style('css/bootstrap.min.css') }}
 	{{ HTML::style('css/font-awesome.min.css') }}
@@ -19,7 +19,7 @@
 					<span class="sr-only">Toggle navigation</span>
 					<i class="fa fa-bars"></i>
 				</button>
-				<div class="navbar-brand" href="#">trusted</div>
+				<div class="navbar-brand" href="#">trusted2</div>
 			</div>
 			<div class="collapse navbar-collapse">
 				<ul class="nav navbar-nav">
@@ -41,7 +41,7 @@
 
 	<div class="footer">
 		<div class="container">
-			<p class="text-muted">Built with <i class="fa fa-heart"></i> in Berlin.</p>
+			<p class="text-muted">Built with <i class="fa fa-heart"></i> in Berlin &amp; Munich.</p>
 		</div>
 	</div>
 

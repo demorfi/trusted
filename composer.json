@@ -3,6 +3,7 @@
 	"description": "SSL certificates manager",
 	"keywords": ["ssl", "certificate", "certificates", "trusted", "ca", "https", "manager"],
 	"license": "MIT",
+	"version": "2.0.0",
 	 "authors": [
 		{
 			"name": "Rene Bartkowiak",
