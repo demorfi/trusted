@@ -23,8 +23,6 @@ This simple SSL certificates manager includes the following features:
 
 Open up `localhost:8080` in your browser follow the instructions under Usage.
 
-Vagrant will 
-
 ## Installation (Stand-alone machine)
 ### Pre-Requirements
 * git
@@ -41,7 +39,7 @@ Vagrant will
 
 ## Usage
 
-After the setup open the app in a browser of your choice. You will be asked for username and password. Initial credentials are admin/password.
+After the setup open the app in a browser of your choice. You will be asked for username and password. Initial credentials are admin / password.
 
 Create a root CA first. Afterwards create users and certificates.
 You can determine different domains of a user seperating them by comma.
