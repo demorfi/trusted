@@ -1,7 +1,6 @@
 # trusted - SSL certificates manager
 
 [![Latest Stable Version](https://poser.pugx.org/bart/trusted/v/stable.png)](https://packagist.org/packages/bart/trusted) [![License](https://poser.pugx.org/bart/trusted/license.png)](https://packagist.org/packages/bart/trusted)
-[![ProjectStatus](http://stillmaintained.com/bart/trusted.png)](http://stillmaintained.com/bart/trusted)
 
 This simple SSL certificates manager includes the following features:
 * Individual root CA setup to sign certficate sign requests (CSR)
@@ -11,17 +10,18 @@ This simple SSL certificates manager includes the following features:
 * Built with Laravel 4 and passion in Berlin
 
 
-## Pre-Requirements
 
+## Installation (Vagrant virtual machine)
+
+## Installation (Stand-alone machine)
+# Pre-Requisites
 * git
 * composer
 * openssl
 * php5-sqlite
 
-
-## Installation
-
-* Clone the package: `git clone https://github.com/bart/trusted.git`
+# Setup
+* Clone the package: `git clone https://github.com/designoid/trusted.git`
 * Change into trusted directory: `cd trusted`
 * Install composer dependencies: `composer install`
 * Set up the app: `php artisan trusted:setup`
