@@ -42,7 +42,7 @@ class CertsController extends \BaseController {
 			return Redirect::route('certs-path')
 				->with('error', 'You are not allowed to create a certificate for this domain.');
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $input['cn'].$input['cns']));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $input['cn'].$input['cns']));
 		if(!File::exists($this->certDir . $sluggedDomain . '.crt')) {
 			// Get field
 			$c = Input::get('c');
@@ -116,7 +116,7 @@ class CertsController extends \BaseController {
 		}
 
 		// Sign CSR
-		$sluggedDomain = Str::slug(str_replace('.', '-', $csrDomain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $csrDomain));
 		$process = new Process("cd {$this->certDir} && openssl x509 -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -req -in {$randomFileName}.csr -out {$randomFileName}.pem && openssl x509 -in {$randomFileName}.pem -out {$sluggedDomain}.crt");
 		$process->run();
 
@@ -142,7 +142,7 @@ class CertsController extends \BaseController {
 		if(!$cert || ($cert->owner->id != Auth::user()->id && !Auth::user()->isAdmin()))
 			return '';
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 
 		return nl2br(File::get($this->certDir.$sluggedDomain.'.crt'));
 	}
@@ -153,7 +153,7 @@ class CertsController extends \BaseController {
 		if(!$cert || ($cert->owner->id != Auth::user()->id && !Auth::user()->isAdmin()))
 			return Redirect::route('certs-path');
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 
 		return Response::download($this->certDir.$sluggedDomain.'.crt');
 	}
@@ -164,7 +164,7 @@ class CertsController extends \BaseController {
 		if(!$cert || ($cert->owner->id != Auth::user()->id && !Auth::user()->isAdmin()))
 			return '';
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 
 		return nl2br(File::get($this->certDir.$sluggedDomain.'.key'));
 	}
@@ -175,7 +175,7 @@ class CertsController extends \BaseController {
 		if(!$cert || ($cert->owner->id != Auth::user()->id && !Auth::user()->isAdmin()))
 			return Redirect::route('certs-path');
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 
 		return Response::download($this->certDir.$sluggedDomain.'.key');
 	}
@@ -186,7 +186,7 @@ class CertsController extends \BaseController {
 		if(!$cert || ($cert->owner->id != Auth::user()->id && !Auth::user()->isAdmin()))
 			return Redirect::route('certs-path');
 
-		$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+		$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 		$cert->delete();
 
 		File::delete($this->certDir.$sluggedDomain.'.key');

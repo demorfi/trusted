@@ -51,7 +51,7 @@ class UsersController extends \BaseController {
 
 		$certsByUser = $user->certs;
 		foreach($certsByUser as $cert) {
-			$sluggedDomain = Str::slug(str_replace('.', '-', $cert->domain));
+			$sluggedDomain = Str::slug(str_replace('.', '_', $cert->domain));
 
 			File::delete($this->certDir.$sluggedDomain.'.key');
 			File::delete($this->certDir.$sluggedDomain.'.pem');
