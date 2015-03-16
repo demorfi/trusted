@@ -1,12 +1,16 @@
 {
-	"name": "bart/trusted",
+	"name": "designoid/trusted",
 	"description": "SSL certificates manager",
-	"keywords": ["ssl", "certificate", "certificates", "trusted", "ca"],
+	"keywords": ["ssl", "certificate", "certificates", "trusted", "ca", "https", "manager"],
 	"license": "MIT",
 	 "authors": [
 		{
 			"name": "Rene Bartkowiak",
 			"email": "info@rene-bartkowiak.com"
+		},
+		{
+			"name": "Thorben Fohlmeister",
+			"email": "thorben@fohlmeister.com"
 		}
     ],
 	"require": {
