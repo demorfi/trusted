@@ -7,9 +7,12 @@ This simple SSL certificates manager includes the following features:
 * Manage users and their permissions based on domains
 * Create SSL certficates with private key
 * Intuitive and simple to use GUI based on bootstrap
-* Built with Laravel 4 and passion in Berlin
+* Built on Laravel 4 and passion in Berlin & Munich
 
 
+## Security Advice
+
+Please be advised that the created Root Certificate Authority key file must be protected by all means. Choose a strong password and don't store it together with the keyfile. Also note that all other key files created by this application are *not* password protected for convenient use in a server environment.
 
 ## Installation (Vagrant virtual machine)
 ### Pre-Requirements
