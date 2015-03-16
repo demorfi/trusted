@@ -3,7 +3,6 @@
 	"description": "SSL certificates manager",
 	"keywords": ["ssl", "certificate", "certificates", "trusted", "ca", "https", "manager"],
 	"license": "MIT",
-	"version": "2.0.0",
 	 "authors": [
 		{
 			"name": "Rene Bartkowiak",
@@ -11,7 +10,8 @@
 		},
 		{
 			"name": "Thorben Fohlmeister",
-			"email": "thorben@fohlmeister.com"
+			"email": "thorben@fohlmeister.com",
+			"homepage": "https://fohlmeister.com"
 		}
     ],
 	"require": {
