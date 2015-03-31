@@ -140,7 +140,7 @@ class CertsController extends \BaseController {
 		$checkDomain = '*'.substr($csrDomain, strpos($csrDomain, '.'));
 
 		if(!$csrDomain || !in_array($checkDomain, Auth::user()->domains)) {
-			File::delete($this->certDir.$sluggedDomain.'.csr'); // cleanup
+			File::delete($this->certDir.$randomFileName.'.csr'); // cleanup
 			return Redirect::route('certs-path')
 				->withInput(Input::except('root_password'))
 				->with('error', 'The provided CSR file is invalid or you are not allowed to create a certificate for the given domain.');
