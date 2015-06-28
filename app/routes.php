@@ -11,6 +11,7 @@ Route::group(['before' => 'auth.basic'], function() {
 	Route::get('cert/{certId}/download', ['as' => 'cert-crt-download-path', 'uses' => 'CertsController@downloadCert']);
 	Route::get('cert/{certId}/key', ['as' => 'cert-key-path', 'uses' => 'CertsController@getKey']);
 	Route::get('cert/{certId}/key/download', ['as' => 'cert-key-download-path', 'uses' => 'CertsController@downloadKey']);
+	Route::get('rootCA/install', ['as' => 'root-ca-install-path', 'uses' => 'CertsController@rootCAInstall']);
 
 	Route::group(['before' => 'isAdmin'], function() {
 		Route::get('users', ['as' => 'users-path', 'uses' => 'UsersController@index']);

@@ -29,6 +29,9 @@
 						<li @if(Route::currentRouteName() == 'root-ca-path') class="active" @endif>{{ link_to_route('root-ca-path', 'Root CA') }}</li>
 					@endif
 				</ul>
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="{{ route('root-ca-install-path') }}"><i class="fa fa-download"></i> Install Root CA</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>

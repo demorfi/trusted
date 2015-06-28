@@ -110,7 +110,7 @@ class CertsController extends \BaseController {
 				->with('warning', 'Certificate already exists.');
 		}
 
-		
+
 	}
 
 	public function sign() {
@@ -162,7 +162,7 @@ class CertsController extends \BaseController {
 				->withInput(Input::except('root_password'))
 				->with('error', 'Could not sign certificate. Is the provided Root CA password correct? '.nl2br($process->getErrorOutput()));
 		}
-		
+
 
 		// Create database entry
 		Cert::create([
@@ -249,6 +249,24 @@ class CertsController extends \BaseController {
 
 		return View::make('rootCA')
 			->withCert($certInfo);
+	}
+
+	public function rootCAInstall() {
+		$rootCACertExists = File::exists($this->certDir . 'rootCA.crt');
+
+		if(!$rootCACertExists)
+                        return View::make('rootCACreate');
+
+		$headers = array(
+			'Content-Type' => 'application/x-x509-ca-cert',
+			'Content-Transfer-Encoding' => 'binary',
+			'Content-Disposition' => 'inline; filename="RootCA.crt"',
+			'Expires' => 0,
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Pragma' => 'public',
+			'Content-Length' => filesize($this->certDir . 'rootCA.crt')
+		);
+		return Response::make(readfile($this->certDir . 'rootCA.crt'), 200, $headers);
 	}
 
 	public function rootCACreate() {
