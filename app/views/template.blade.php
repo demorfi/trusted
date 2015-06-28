@@ -31,6 +31,7 @@
 				</ul>
 				<ul class="nav navbar-nav navbar-right">
 					<li><a href="{{ route('root-ca-install-path') }}"><i class="fa fa-download"></i> Install Root CA</a></li>
+					<li><a href="{{ route('users-logout-path') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
 				</ul>
 			</div>
 		</div>
