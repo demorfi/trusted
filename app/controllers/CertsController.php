@@ -81,7 +81,7 @@ class CertsController extends \BaseController {
 			}
 
 			// Sign cert, convert into DES and remove CSR
-			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -req -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
+			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
 			$process->run();
 
 			if (!$process->isSuccessful()) {
@@ -150,7 +150,7 @@ class CertsController extends \BaseController {
 
 		// Sign CSR
 		$sluggedDomain = Str::slug(str_replace('.', '_', $csrDomain));
-		$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -req -in {$randomFileName}.csr -out {$randomFileName}.pem && openssl x509 -in {$randomFileName}.pem -out {$sluggedDomain}.crt");
+		$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -in {$randomFileName}.csr -out {$randomFileName}.pem && openssl x509 -in {$randomFileName}.pem -out {$sluggedDomain}.crt");
 		$process->run();
 
 		// Remove CSR and PEM
