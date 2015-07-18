@@ -12,11 +12,6 @@ class UsersController extends \BaseController {
 		return View::make('users')->withUsers($users);
 	}
 
-	public function logout() {
-		Session::flush();
-		return Redirect::to(preg_replace("/:\/\//", "://log-me-out:fake-pwd@", url('/')));
-	}
-
 	public function store() {
 		$input = Input::all();
 		$rules = [

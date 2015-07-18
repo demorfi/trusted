@@ -1,8 +1,11 @@
 <?php
 
 Route::get('/', ['as' => 'home', 'uses' => 'CertsController@redirect']);
+Route::get('login', ['as' => 'auth-login-path', 'uses' => 'AuthController@showLogin']);
+Route::post('login', ['uses' => 'AuthController@doLogin']);
+Route::get('rootCA/install', ['as' => 'root-ca-install-path', 'uses' => 'CertsController@rootCAInstall']);
 
-Route::group(['before' => 'auth.basic'], function() {
+Route::group(['before' => 'auth'], function() {
 	Route::get('certs', ['as' => 'certs-path', 'uses' => 'CertsController@index']);
 	Route::post('certs', ['as' => 'create-cert-path', 'uses' => 'CertsController@store']);
 	Route::post('cert/sign', ['as' => 'sign-cert-path', 'uses' => 'CertsController@sign']);
@@ -11,8 +14,7 @@ Route::group(['before' => 'auth.basic'], function() {
 	Route::get('cert/{certId}/download', ['as' => 'cert-crt-download-path', 'uses' => 'CertsController@downloadCert']);
 	Route::get('cert/{certId}/key', ['as' => 'cert-key-path', 'uses' => 'CertsController@getKey']);
 	Route::get('cert/{certId}/key/download', ['as' => 'cert-key-download-path', 'uses' => 'CertsController@downloadKey']);
-	Route::get('rootCA/install', ['as' => 'root-ca-install-path', 'uses' => 'CertsController@rootCAInstall']);
-	Route::get('logout', ['as' => 'users-logout-path', 'uses' => 'UsersController@logout']);
+	Route::get('logout', ['as' => 'auth-logout-path', 'uses' => 'AuthController@doLogout']);
 
 	Route::group(['before' => 'isAdmin'], function() {
 		Route::get('users', ['as' => 'users-path', 'uses' => 'UsersController@index']);
