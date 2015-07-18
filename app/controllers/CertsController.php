@@ -59,6 +59,7 @@ class CertsController extends \BaseController {
 			$san = Input::get('san');
 			$email = Input::get('email');
 			$root_pw = Input::get('root_password');
+			$extension = 'v3_emp';
 
 			// Prepare subject
 			$subj = "'/C={$c}";
@@ -81,12 +82,15 @@ class CertsController extends \BaseController {
 				foreach($altNames as $index => $altName) {
 					$ini->setValue(('DNS.' . ($index + 1)), $altName, 'alt_names');
 				}
+				$extension = 'v3_req';
 			}
 
 			$ini->save();
 
 			// Create private key and CSR
-			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 -reqexts v3_req -extensions v3_req -config {$tmpcnf} -keyout {$sluggedDomain}.key -out {$sluggedDomain}.csr -days 365 -subj {$subj}");
+			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 "
+				. "-reqexts {$extension} -extensions {$extension} -config {$tmpcnf} -keyout {$sluggedDomain}.key "
+				. "-out {$sluggedDomain}.csr -days 365 -subj {$subj}");
 			$process->run();
 
 			if (!$process->isSuccessful()) {
@@ -100,7 +104,10 @@ class CertsController extends \BaseController {
 			}
 
 			// Sign cert, convert into DES and remove CSR
-			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -extensions v3_req -extfile {$tmpcnf} -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 -extensions v3_req -extfile {$tmpcnf} -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
+			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem "
+				. "-CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -extensions {$extension} "
+				. "-extfile {$tmpcnf} -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 "
+				. "-extensions {$extension} -extfile {$tmpcnf} -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
 			$process->run();
 
 			if (!$process->isSuccessful()) {
