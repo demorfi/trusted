@@ -17,7 +17,8 @@
 	"require": {
 		"laravel/framework": "4.2.*",
 		"way/generators": "2.*",
-		"barryvdh/laravel-ide-helper": "1.*"
+		"barryvdh/laravel-ide-helper": "1.*",
+		"jelix/inifile": "~1.7"
 	},
 	"autoload": {
 		"classmap": [

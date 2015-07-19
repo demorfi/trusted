@@ -22,11 +22,26 @@
 				<div class="navbar-brand" href="#">trusted2</div>
 			</div>
 			<div class="collapse navbar-collapse">
-				<ul class="nav navbar-nav">
-					<li @if(Route::currentRouteName() == 'certs-path') class="active" @endif>{{ link_to_route('certs-path', 'Certs') }}</li>
-					@if(Auth::user()->isAdmin())
-						<li @if(Route::currentRouteName() == 'users-path') class="active" @endif>{{ link_to_route('users-path', 'Users') }}</li>
-						<li @if(Route::currentRouteName() == 'root-ca-path') class="active" @endif>{{ link_to_route('root-ca-path', 'Root CA') }}</li>
+				@if(Auth::check())
+					<ul class="nav navbar-nav">
+						<li @if(Route::currentRouteName() == 'certs-path') class="active" @endif>
+							<a href="{{ route('certs-path') }}"><i class="fa fa-certificate"></i> Certs</a>
+						</li>
+						@if(Auth::user()->isAdmin())
+							<li @if(Route::currentRouteName() == 'users-path') class="active" @endif>
+								<a href="{{ route('users-path') }}"><i class="fa fa-users"></i> Users</a>
+							</li>
+							<li @if(Route::currentRouteName() == 'root-ca-path') class="active" @endif>
+								<a href="{{ route('root-ca-path') }}"><i class="fa fa-university"></i> Root CA</a>
+							</li>
+						@endif
+					</ul>
+				@endif
+				<ul class="nav navbar-nav navbar-right">
+					<li><a href="{{ route('root-ca-install-path') }}"><i class="fa fa-download"></i> Install Root CA</a></li>
+
+					@if(Auth::check())
+						<li><a href="{{ route('auth-logout-path') }}"><i class="fa fa-sign-out"></i> Log out</a></li>
 					@endif
 				</ul>
 			</div>

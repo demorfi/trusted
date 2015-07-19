@@ -4,9 +4,11 @@ use Symfony\Component\Process\Process;
 
 class CertsController extends \BaseController {
 	private $certDir;
+	private $cnfPath;
 
 	public function __construct() {
 		$this->certDir = base_path() . '/certs/';
+		$this->cnfPath = base_path() . '/openssl.cnf';
 		$this->beforeFilter('rootCAExists', ['except' => ['rootCAIndex', 'rootCACreate']]);
 	}
 
@@ -54,8 +56,10 @@ class CertsController extends \BaseController {
 			$o = Input::get('o');
 			$ou = Input::get('ou');
 			$cn = $input['cn'].$input['cns'];
+			$san = Input::get('san');
 			$email = Input::get('email');
 			$root_pw = Input::get('root_password');
+			$extension = 'v3_emp';
 
 			// Prepare subject
 			$subj = "'/C={$c}";
@@ -67,33 +71,57 @@ class CertsController extends \BaseController {
 			$subj .= !empty($email) ? "/Email={$email}" : '';
 			$subj .= "'";
 
+			// copy config openssl
+			$tmpcnf = tempnam(sys_get_temp_dir(), 'ssl');
+			file_put_contents($tmpcnf, file_get_contents($this->cnfPath));
+			$ini = new \Jelix\IniFile\IniModifier($tmpcnf);
+
+			// Add alternate name
+			if (!empty($san)) {
+				$altNames = array_filter(explode(',', str_replace(array(',', ' ', ';'), ',', ($san . ','))));
+				foreach($altNames as $index => $altName) {
+					$ini->setValue(('DNS.' . ($index + 1)), $altName, 'alt_names');
+				}
+				$extension = 'v3_req';
+			}
+
+			$ini->save();
+
 			// Create private key and CSR
-			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 -keyout {$sluggedDomain}.key -out {$sluggedDomain}.csr -days 365 -subj {$subj}");
+			$process = new Process("cd {$this->certDir} && openssl req -nodes -new -newkey rsa:2048 -sha256 "
+				. "-reqexts {$extension} -extensions {$extension} -config {$tmpcnf} -keyout {$sluggedDomain}.key "
+				. "-out {$sluggedDomain}.csr -days 365 -subj {$subj}");
 			$process->run();
 
 			if (!$process->isSuccessful()) {
 				File::delete($this->certDir.$sluggedDomain.'.csr'); // cleanup
 				File::delete($this->certDir.$sluggedDomain.'.pem');
 				File::delete($this->certDir.$sluggedDomain.'.key');
+				File::delete($tmpcnf);
 				return Redirect::route('certs-path')
 					->withInput(Input::except('root_password'))
 					->with('error', 'Could not create private key or CSR. '.$process->getErrorOutput());
 			}
 
 			// Sign cert, convert into DES and remove CSR
-			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -req -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
+			$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem "
+				. "-CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -extensions {$extension} "
+				. "-extfile {$tmpcnf} -in {$sluggedDomain}.csr -out {$sluggedDomain}.pem && openssl x509 "
+				. "-extensions {$extension} -extfile {$tmpcnf} -in {$sluggedDomain}.pem -out {$sluggedDomain}.crt");
 			$process->run();
 
 			if (!$process->isSuccessful()) {
 				File::delete($this->certDir.$sluggedDomain.'.csr'); // cleanup
 				File::delete($this->certDir.$sluggedDomain.'.pem');
 				File::delete($this->certDir.$sluggedDomain.'.key');
+				File::delete($tmpcnf);
 				return Redirect::route('certs-path')
 					->withInput(Input::except('root_password'))
 					->with('error', 'Could not sign certificate. Is the provided Root CA password correct? '.nl2br($process->getErrorOutput()));
 			}
 
 			File::delete($this->certDir.$sluggedDomain.'.csr');
+			File::delete($tmpcnf);
 
 			// Create database entry
 			Cert::create([
@@ -110,7 +138,7 @@ class CertsController extends \BaseController {
 				->with('warning', 'Certificate already exists.');
 		}
 
-		
+
 	}
 
 	public function sign() {
@@ -150,7 +178,7 @@ class CertsController extends \BaseController {
 
 		// Sign CSR
 		$sluggedDomain = Str::slug(str_replace('.', '_', $csrDomain));
-		$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -req -in {$randomFileName}.csr -out {$randomFileName}.pem && openssl x509 -in {$randomFileName}.pem -out {$sluggedDomain}.crt");
+		$process = new Process("cd {$this->certDir} && openssl x509 -passin pass:{$root_pw} -CA rootCA.pem -CAkey rootCA.key -CAcreateserial -days 365 -sha256 -req -in {$randomFileName}.csr -out {$randomFileName}.pem && openssl x509 -in {$randomFileName}.pem -out {$sluggedDomain}.crt");
 		$process->run();
 
 		// Remove CSR and PEM
@@ -162,7 +190,7 @@ class CertsController extends \BaseController {
 				->withInput(Input::except('root_password'))
 				->with('error', 'Could not sign certificate. Is the provided Root CA password correct? '.nl2br($process->getErrorOutput()));
 		}
-		
+
 
 		// Create database entry
 		Cert::create([
@@ -249,6 +277,24 @@ class CertsController extends \BaseController {
 
 		return View::make('rootCA')
 			->withCert($certInfo);
+	}
+
+	public function rootCAInstall() {
+		$rootCACertExists = File::exists($this->certDir . 'rootCA.crt');
+
+		if(!$rootCACertExists)
+                        return View::make('rootCACreate');
+
+		$headers = array(
+			'Content-Type' => 'application/x-x509-ca-cert',
+			'Content-Transfer-Encoding' => 'binary',
+			'Content-Disposition' => 'inline; filename="RootCA.crt"',
+			'Expires' => 0,
+			'Cache-Control' => 'must-revalidate, post-check=0, pre-check=0',
+			'Pragma' => 'public',
+			'Content-Length' => filesize($this->certDir . 'rootCA.crt')
+		);
+		return Response::make(readfile($this->certDir . 'rootCA.crt'), 200, $headers);
 	}
 
 	public function rootCACreate() {
