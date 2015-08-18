@@ -47,7 +47,7 @@ class SetupCommand extends Command {
 		// Setup key and database migration
 		if(Config::get('app.key') == 'YourSecretKey!!!') {
 			$this->call('key:generate');
-			$this->call('migrate', ['--seed' => true, '--force' => true]);
+			$this->call('migrate', ['--seed' => true]);
 		}
 	}
 

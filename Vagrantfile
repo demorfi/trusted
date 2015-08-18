@@ -32,6 +32,7 @@ Vagrant.configure(2) do |config|
     cd /vagrant
     php -r "readfile('https://getcomposer.org/installer');" | php
     php composer.phar install
+    php composer.phar update
     php artisan trusted:setup
   SHELL
 
