@@ -21,7 +21,11 @@ The container by default exposes port 80 and suggests the folder `/data` to be m
 ### Example `docker run`
 The following command will download and run the image, mapping the local port 8000 to the containers port 80 and a folder called `trusted` in your home directory to the containers `/data` folder.
 
-    docker run --restart=always -d -p 8000:80/tcp -v ~/trusted:/data tfohlmeister/trusted2:latest
+    docker run -d --restart=always \
+      -p 8000:80/tcp \
+      -v ~/trusted:/data \
+      --name trusted2 \
+      tfohlmeister/trusted2:latest
 
 Now open up `localhost:8000` in your browser follow the instructions under Usage.
 
