@@ -37,18 +37,14 @@ class SetupCommand extends Command {
 	public function fire()
 	{
 		// Create certs dir if it doesn't exist
-		if(!File::isDirectory(base_path().'/certs'))
-			File::makeDirectory(base_path().'/certs');
+		if(!File::isDirectory('/data/certs'))
+			File::makeDirectory('/data/certs');
 
 		// Touch sqlite database file
-		if(!File::exists(app_path().'/database/trusted.sqlite'))
-			File::put(app_path().'/database/trusted.sqlite', '');
-
-		// Setup key and database migration
-		if(Config::get('app.key') == 'YourSecretKey!!!') {
-			$this->call('key:generate');
-			$this->call('migrate', ['--seed' => true]);
-		}
+		if(!File::exists('/data/trusted.sqlite')) {
+			File::put('/data/trusted.sqlite', '');
+			$this->call('migrate', ['--seed' => true, '--force' => true]);
+    }
 	}
 
 }
