@@ -96,6 +96,6 @@ Route::filter('isAdmin', function() {
 });
 
 Route::filter('rootCAExists', function() {
-	if(!File::exists(base_path() . '/certs/rootCA.crt'))
+	if(!File::exists('/data/certs/rootCA.crt'))
 		return Redirect::route('root-ca-path');
 });

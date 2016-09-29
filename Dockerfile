@@ -9,6 +9,7 @@ RUN apt-get -q update && \
   rm -rf /var/lib/apt/lists/*
 
 COPY source /source
+COPY openssl.cnf /source/openssl.cnf
 RUN chown -R www-data:www-data /source
 
 # setup apache2
@@ -20,7 +21,6 @@ RUN a2enmod rewrite && \
 
 # database and certs get stored here
 RUN mkdir -p /data
-VOLUME ["/data"]
 
 # setup dependencies & software
 WORKDIR /source
@@ -32,5 +32,6 @@ RUN php -r 'copy("https://getcomposer.org/installer", "composer-setup.php");' &&
 COPY run.sh /run.sh
 RUN chmod +x /run.sh
 
+VOLUME ["/data"]
 EXPOSE 80
 CMD ["/run.sh"]

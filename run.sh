@@ -4,9 +4,10 @@ APACHE=$(which apachectl)
 
 echo ""
 echo "====================================================================="
-echo "WARNING: Make sure you have a volume mounted to '/data'!"
+echo "WARNING:"
+echo "Make sure you have a volume mounted on '/data'!"
 echo "Otherwise your certificates and database will be lost once the container gets destroyed."
-echo "Default credentials: admin / password."
+echo "Default credentials:    admin / password."
 echo "====================================================================="
 echo ""
 
