@@ -3,7 +3,7 @@
 class UsersController extends \BaseController {
 
 	public function __construct() {
-		$this->certDir = base_path() . '/certs/';
+		$this->certDir = '/data/certs/';
 	}
 
 	public function index() {

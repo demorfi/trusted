@@ -1,11 +1,9 @@
-# trusted - SSL certificates manager
+# trusted - Dockerized SSL certificates manager
 
-[![Latest Stable Version](https://poser.pugx.org/designoid/trusted/v/stable.png)](https://packagist.org/packages/designoid/trusted) [![License](https://poser.pugx.org/designoid/trusted/license.png)](https://packagist.org/packages/designoid/trusted)
-
-This simple SSL certificates manager includes the following features:
-* Individual root CA setup to sign certficate sign requests (CSR)
+This simple dockerized SSL certificates manager includes the following features:
+* Individual root CA setup with password protected private key to sign certificate sign requests (CSR)
 * Manage users and their permissions based on domains
-* Create SSL certficates with private key
+* Create SSL certificates with private key
 * Intuitive and simple to use GUI based on bootstrap
 * Built on Laravel 4 and passion in Berlin & Munich
 
@@ -14,38 +12,28 @@ This simple SSL certificates manager includes the following features:
 
 Please be advised that the created Root Certificate Authority key file must be protected by all means. Choose a strong password and don't store it together with the keyfile. Also note that all other key files created by this application are *not* password protected for convenient use in a server environment.
 
-## Installation (Vagrant virtual machine)
-### Pre-Requirements
-* only [Vagrant](https://www.vagrantup.com/)
+## Setup using  [Docker](http://docker.io)
 
-### Setup
-* Clone the archive: `git clone https://github.com/designoid/trusted.git`
-* Change into trusted directory: `cd trusted`
-* Fire up the vagrant machine: `vagrant up`
-* Wait a few minutes a vagrant magically sets up the virtual machine
+The container by default exposes port 80 and suggests the folder `/data` to be mapped as a volume.
 
-Open up `localhost:8080` in your browser follow the instructions under Usage.
+*Caution: If you don't setup a volume mapping to `/data`, your newly created certificates and the backend database will be lost upon destroying the container.*
 
-## Installation (Stand-alone machine)
-### Pre-Requirements
-* git
-* composer
-* openssl
-* php5-sqlite
+### Example `docker run`
+The following command will download and run the image, mapping the local port 8000 to the containers port 80 and a folder called `trusted` in your home directory to the containers `/data` folder.
 
-### Setup
-* Clone the archive: `git clone https://github.com/designoid/trusted.git`
-* Change into trusted directory: `cd trusted`
-* Install composer dependencies: `composer install`
-* Set up the app: `php artisan trusted:setup`
-* Add a vhost with `trusted/public` as DocumentRoot.
+    docker run -d --restart=always \
+      -p 8000:80/tcp \
+      -v ~/trusted:/data \
+      --name trusted2 \
+      tfohlmeister/trusted2:latest
+
+Now open up `localhost:8000` in your browser follow the instructions under Usage.
 
 ## Usage
 
 After the setup open the app in a browser of your choice. You will be asked for username and password. Initial credentials are admin / password.
 
-Create a root CA first. Afterwards create users and certificates.
-You can determine different domains of a user seperating them by comma.
+You will have to create a root CA first. Afterwards create users and certificates. You can determine different domains of a user by separating them with commas.
 
 Enjoy and contribute!
 

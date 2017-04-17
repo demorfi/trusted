@@ -7,7 +7,7 @@ class CertsController extends \BaseController {
 	private $cnfPath;
 
 	public function __construct() {
-		$this->certDir = base_path() . '/certs/';
+		$this->certDir = '/data/certs/';
 		$this->cnfPath = base_path() . '/openssl.cnf';
 		$this->beforeFilter('rootCAExists', ['except' => ['rootCAIndex', 'rootCACreate']]);
 	}
